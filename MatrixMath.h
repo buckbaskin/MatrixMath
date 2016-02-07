@@ -6,6 +6,7 @@
  *  NUMERICAL RECIPES: The Art of Scientific Computing.
  *
  *  Modified by buckbaskin starting on 2/7/16.
+ *  For original, see http://playground.arduino.cc/Code/MatrixMath
  */
 
 #ifndef MatrixMath_h
