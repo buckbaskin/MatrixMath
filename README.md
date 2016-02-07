@@ -42,4 +42,4 @@ select from the menubar "Sketch->Import Library->MatrixMath".
 
 Once the library is imported, a "#include MatrixMath.h" line will appear at the top of your Sketch.
 
-The MatrixMathExample in the Examples folder demonstrates multiplication and inversion using the MatrixPrint() function to show results.
+The MatrixMathDemo in the Examples folder demonstrates multiplication and inversion using the MatrixPrint() function to show results.
