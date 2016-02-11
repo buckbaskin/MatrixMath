@@ -17,99 +17,103 @@ MatrixMath Matrix;			// Pre-instantiate
 
 // Matrix Printing Routine
 // Uses tabs to separate numbers under assumption printed float width won't cause problems
-void MatrixMath::Print(float* A, int m, int n, String label){
-	// A = input matrix (m x n)
+void MatrixMath::Print(float* input, int m, int n, String label){
+	// input = input matrix (m x n)
 	int i,j;
 	Serial.println();
 	Serial.println(label);
 	for (i=0; i<m; i++){
 		for (j=0;j<n;j++){
-			Serial.print(A[n*i+j]);
+			Serial.print(input[n*i+j]);
 			Serial.print("\t");
 		}
 		Serial.println();
 	}
 }
 
-void MatrixMath::Copy(float* A, int n, int m, float* B)
+void MatrixMath::Copy(float* input, int n, int m, float* out)
 {
 	int i, j, k;
 	for (i=0;i<m;i++)
 		for(j=0;j<n;j++)
 		{
-			B[n*i+j] = A[n*i+j];
+			out[n*i+j] = input[n*i+j];
 		}
 }
 
 //Matrix Multiplication Routine
-// C = A*B
-void MatrixMath::Multiply(float* A, float* B, int m, int p, int n, float* C)
+// out = left*right
+void MatrixMath::Multiply(float* left, float* right, int m, int p, int n, float* out)
 {
-	// A = input matrix (m x p)
-	// B = input matrix (p x n)
-	// m = number of rows in A
-	// p = number of columns in A = number of rows in B
-	// n = number of columns in B
-	// C = output matrix = A*B (m x n)
+	// left = input matrix (m x p)
+	// right = input matrix (p x n)
+	// m = number of rows in left
+	// p = number of columns in left = number of rows in right
+	// n = number of columns in right
+	// out = output matrix = left*right (m x n)
 	int i, j, k;
 	for (i=0;i<m;i++)
 		for(j=0;j<n;j++)
 		{
-			C[n*i+j]=0;
+			out[n*i+j]=0;
 			for (k=0;k<p;k++)
-				C[n*i+j]= C[n*i+j]+A[p*i+k]*B[n*k+j];
+				out[n*i+j]= out[n*i+j]+left[p*i+k]*right[n*k+j];
 		}
 }
 
 
 //Matrix Addition Routine
-void MatrixMath::Add(float* A, float* B, int m, int n, float* C)
+void MatrixMath::Add(float* left, float* right, int m, int n, float* out)
 {
-	// A = input matrix (m x n)
-	// B = input matrix (m x n)
-	// m = number of rows in A = number of rows in B
-	// n = number of columns in A = number of columns in B
-	// C = output matrix = A+B (m x n)
+	// left = input matrix (m x n)
+	// right = input matrix (m x n)
+	// m = number of rows in left = number of rows in right
+	// n = number of columns in left = number of columns in right
+	// out = output matrix = left+right (m x n)
 	int i, j;
 	for (i=0;i<m;i++)
 		for(j=0;j<n;j++)
-			C[n*i+j]=A[n*i+j]+B[n*i+j];
+			out[n*i+j]=left[n*i+j]+right[n*i+j];
 }
 
 
 //Matrix Subtraction Routine
-void MatrixMath::Subtract(float* A, float* B, int m, int n, float* C)
+void MatrixMath::Subtract(float* left, float* right, int m, int n, float* out)
 {
-	// A = input matrix (m x n)
-	// B = input matrix (m x n)
-	// m = number of rows in A = number of rows in B
-	// n = number of columns in A = number of columns in B
-	// C = output matrix = A-B (m x n)
+	// left = input matrix (m x n)
+	// right = input matrix (m x n)
+	// m = number of rows in left = number of rows in right
+	// n = number of columns in left = number of columns in right
+	// out = output matrix = left-right (m x n)
 	int i, j;
 	for (i=0;i<m;i++)
 		for(j=0;j<n;j++)
-			C[n*i+j]=A[n*i+j]-B[n*i+j];
+			out[n*i+j]=left[n*i+j]-right[n*i+j];
 }
 
 
 //Matrix Transpose Routine
-void MatrixMath::Transpose(float* A, int m, int n, float* C)
+void MatrixMath::Transpose(float* input, int m, int n, float* out)
 {
-	// A = input matrix (m x n)
-	// m = number of rows in A
-	// n = number of columns in A
-	// C = output matrix = the transpose of A (n x m)
+	// input = input matrix (m x n)
+	// m = number of rows in input
+	// n = number of columns in input
+	// out = output matrix = the transpose of input (n x m)
 	int i, j;
 	for (i=0;i<m;i++)
 		for(j=0;j<n;j++)
-			C[m*j+i]=A[n*i+j];
+			out[m*j+i]=input[n*i+j];
 }
 
-void MatrixMath::Scale(float* A, int m, int n, float k)
+void MatrixMath::Scale(float* input, int m, int n, float k, float* out)
 {
+	// input = input matrix (m x n)
+	// m = number of rows in input
+	// n = number of columns in input
+	// out = output matrix = elementwise multiplication of k*input[][]
 	for (int i=0; i<m; i++)
 		for (int j=0; j<n; j++)
-			A[n*i+j] = A[n*i+j]*k;
+			out[n*i+j] = input[n*i+j]*k;
 }
 
 
@@ -120,9 +124,9 @@ void MatrixMath::Scale(float* A, int m, int n, float k)
 //	 NUMERICAL RECIPES: The Art of Scientific Computing.
 // * The function returns 1 on success, 0 on failure.
 // * NOTE: The argument is ALSO the result matrix, meaning the input matrix is REPLACED
-int MatrixMath::Invert(float* A, int n)
+int MatrixMath::Invert(float* square, int n)
 {
-	// A = input matrix AND result matrix
+	// square = input matrix AND result matrix
 	// n = number of rows = number of columns in A (n x n)
 	int pivrow;		// keeps track of current pivot row
 	int k,i,j;		// k: overall index along diagonal; i: row index; j: col index
@@ -135,15 +139,15 @@ int MatrixMath::Invert(float* A, int n)
 		tmp = 0;
 		for (i = k; i < n; i++)
 		{
-			if (abs(A[i*n+k]) >= tmp)	// 'Avoid using other functions inside abs()?'
+			if (abs(square[i*n+k]) >= tmp)	// 'Avoid using other functions inside abs()?'
 			{
-				tmp = abs(A[i*n+k]);
+				tmp = abs(square[i*n+k]);
 				pivrow = i;
 			}
 		}
 
 		// check for singular matrix
-		if (A[pivrow*n+k] == 0.0f)
+		if (square[pivrow*n+k] == 0.0f)
 		{
 			Serial.println("Inversion failed due to singular matrix");
 			return 0;
@@ -155,20 +159,20 @@ int MatrixMath::Invert(float* A, int n)
 			// swap row k with pivrow
 			for (j = 0; j < n; j++)
 			{
-				tmp = A[k*n+j];
-				A[k*n+j] = A[pivrow*n+j];
-				A[pivrow*n+j] = tmp;
+				tmp = square[k*n+j];
+				square[k*n+j] = square[pivrow*n+j];
+				square[pivrow*n+j] = tmp;
 			}
 		}
 		pivrows[k] = pivrow;	// record row swap (even if no swap happened)
 
-		tmp = 1.0f/A[k*n+k];	// invert pivot element
-		A[k*n+k] = 1.0f;		// This element of input matrix becomes result matrix
+		tmp = 1.0f/square[k*n+k];	// invert pivot element
+		square[k*n+k] = 1.0f;		// This element of input matrix becomes result matrix
 
 		// Perform row reduction (divide every element by pivot)
 		for (j = 0; j < n; j++)
 		{
-			A[k*n+j] = A[k*n+j]*tmp;
+			square[k*n+j] = square[k*n+j]*tmp;
 		}
 
 		// Now eliminate all other entries in this column
@@ -176,11 +180,11 @@ int MatrixMath::Invert(float* A, int n)
 		{
 			if (i != k)
 			{
-				tmp = A[i*n+k];
-				A[i*n+k] = 0.0f;  // The other place where in matrix becomes result mat
+				tmp = square[i*n+k];
+				square[i*n+k] = 0.0f;  // The other place where in matrix becomes result mat
 				for (j = 0; j < n; j++)
 				{
-					A[i*n+j] = A[i*n+j] - A[k*n+j]*tmp;
+					square[i*n+j] = square[i*n+j] - square[k*n+j]*tmp;
 				}
 			}
 		}
@@ -193,9 +197,9 @@ int MatrixMath::Invert(float* A, int n)
 		{
 			for (i = 0; i < n; i++)
 			{
-				tmp = A[i*n+k];
-				A[i*n+k] = A[i*n+pivrows[k]];
-				A[i*n+pivrows[k]] = tmp;
+				tmp = square[i*n+k];
+				square[i*n+k] = square[i*n+pivrows[k]];
+				square[i*n+pivrows[k]] = tmp;
 			}
 		}
 	}

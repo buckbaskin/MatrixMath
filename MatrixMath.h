@@ -21,15 +21,15 @@
 class MatrixMath
 {
 public:
-	//MatrixMath();
-	void Print(float* A, int m, int n, String label);
-	void Copy(float* A, int n, int m, float* B);
-	void Multiply(float* A, float* B, int m, int p, int n, float* C);
-	void Add(float* A, float* B, int m, int n, float* C);
-	void Subtract(float* A, float* B, int m, int n, float* C);
-	void Transpose(float* A, int m, int n, float* C);
-	void Scale(float* A, int m, int n, float k);
-	int Invert(float* A, int n);
+    //MatrixMath();
+    void Print(float* A, int m, int n, String label);
+    void Copy(float* A, int n, int m, float* out);
+    void Multiply(float* A, float* B, int m, int p, int n, float* out);
+    void Add(float* A, float* B, int m, int n, float* out);
+    void Subtract(float* A, float* B, int m, int n, float* out);
+    void Transpose(float* A, int m, int n, float* out);
+    void Scale(float* A, int m, int n, float k, float* out);
+    int Invert(float* A, int n);
 };
 
 extern MatrixMath Matrix;
