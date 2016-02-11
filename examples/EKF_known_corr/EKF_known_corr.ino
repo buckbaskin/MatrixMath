@@ -24,7 +24,9 @@ void loop() {
   rate.sleep();
 }
 
-void ekf_known_correspondences(float* last_mean, float* last_covar, float* ctrl, float* mes, int* cor, float* m) {
+void ekf_known_correspondences(float* last_mean, float* last_covar, 
+  float* ctrl, float* mes, int* cor, float* m, float* new_mean, 
+  float* new_covar) {
   // mu hat
   float temp[N];
   // TODO calc temp from control
@@ -42,4 +44,10 @@ void ekf_known_correspondences(float* last_mean, float* last_covar, float* ctrl,
   Matrix.Transpose((float*) G, N, N, (float*) G);
   Matrix.Multiply((float*) temp2, (float*) G, N, N, N, (float*) temp2);
   Matrix.Add((float*) temp2, (float*) R, N, N, (float*) temp_sigma);
+
+  // Qt
+  float Q[N][N];
+
+  // for loop over features
+  // endfor
 }
